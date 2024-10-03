@@ -1,8 +1,6 @@
-from marshmallow import Schema, EXCLUDE, fields, post_load
+from marshmallow import post_load
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema, auto_field
-from marshmallow_enum import EnumField
 from core.models.teachers import Teacher
-from core.libs.helpers import GeneralObject
 
 class TeacherSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -14,5 +12,5 @@ class TeacherSchema(SQLAlchemyAutoSchema):
     updated_at = auto_field(dump_only=True)
 
     @post_load
-    def initiate_class(self, data, many, partial):
+    def initiate_class(self, data, many):
         return Teacher(**data)

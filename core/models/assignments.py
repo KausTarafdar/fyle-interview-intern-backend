@@ -97,18 +97,18 @@ class Assignment(db.Model):
 
     @classmethod
     def get_assignments_by_teacher(cls, teacher_id):
-        return cls.filter(cls.teacher_id == teacher_id, cls.state != 'DRAFT').all()
+        return cls.filter(cls.teacher_id == teacher_id, cls.state != AssignmentStateEnum.DRAFT).all()
 
     @classmethod
     def get_all_submitted_or_graded(cls):
-        return cls.filter(cls.state != 'DRAFT').all()
+        return cls.filter(cls.state != AssignmentStateEnum.DRAFT).all()
 
     @classmethod
     def regrade_assignment(cls, _id, grade):
         if _id is not None:
             assignment = Assignment.get_by_id(_id)
             assertions.assert_found(assignment, 'No assignment with this id was found')
-            assertions.assert_valid(assignment.state != AssignmentStateEnum.DRAFT, 'Cannot grade an assignment in draft mode')
+            assertions.assert_valid(assignment.state != AssignmentStateEnum.DRAFT, 'Cannot grade an assignment in DRAFT mode')
             assertions.assert_valid(grade is not None, 'Cannot regrade with an empty grade')
             assignment.grade = grade
             assignment.state = AssignmentStateEnum.GRADED

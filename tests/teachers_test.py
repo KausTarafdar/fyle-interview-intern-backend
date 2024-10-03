@@ -99,3 +99,21 @@ def test_grade_assignment_draft_assignment(client, h_teacher_1):
     data = response.json
 
     assert data['error'] == 'FyleError'
+
+def test_grade_assignment_bad_grade(client, h_teacher_1):
+    """
+    failure case: API shouldn't allow id as None
+    """
+    response = client.post(
+        '/teacher/assignments/grade',
+        headers=h_teacher_1,
+        json={
+            "id": 9,
+            "grade": None
+        }
+    )
+
+    assert response.status_code == 400
+    data = response.json
+
+    assert data['error'] == 'ValidationError'

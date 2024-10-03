@@ -59,3 +59,26 @@ def test_regrade_assignment(client, h_principal):
 
     assert response.json['data']['state'] == AssignmentStateEnum.GRADED.value
     assert response.json['data']['grade'] == GradeEnum.B
+
+def test_get_list_teachers(client, h_principal):
+    response = client.get(
+        '/principal/teachers',
+        headers=h_principal
+    )
+
+    data = response.json['data']
+
+    for teacher in data:
+        assert type(teacher['id']) == type(0)
+        assert type(teacher['user_id']) == type(0)
+
+def test_get_teacher_list_header_check(client):
+    response = client.get(
+        '/principal/teachers',
+    )
+
+    error_response = response.json
+
+    assert response.status_code == 401
+    assert error_response['error'] == 'FyleError'
+    assert error_response["message"] == 'principal not found'
